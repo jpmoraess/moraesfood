@@ -21,6 +21,10 @@ public class Restaurante {
         this.taxaFrete = taxaFrete;
     }
 
+    public Restaurante() {
+
+    }
+
     public Long getId() {
         return id;
     }

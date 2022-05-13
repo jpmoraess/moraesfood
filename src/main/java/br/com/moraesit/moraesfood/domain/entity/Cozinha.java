@@ -19,6 +19,10 @@ public class Cozinha {
         this.nome = nome;
     }
 
+    public Cozinha() {
+
+    }
+
     public Long getId() {
         return id;
     }

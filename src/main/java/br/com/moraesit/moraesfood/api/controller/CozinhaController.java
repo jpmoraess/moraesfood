@@ -1,5 +1,6 @@
 package br.com.moraesit.moraesfood.api.controller;
 
+import br.com.moraesit.moraesfood.api.model.CozinhasXmlWrapper;
 import br.com.moraesit.moraesfood.domain.entity.Cozinha;
 import br.com.moraesit.moraesfood.domain.repository.CozinhaRepository;
 import org.springframework.http.MediaType;
@@ -20,9 +21,14 @@ public class CozinhaController {
         this.cozinhaRepository = cozinhaRepository;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public List<Cozinha> listar() {
         return cozinhaRepository.listar();
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    public CozinhasXmlWrapper listarXml() {
+        return new CozinhasXmlWrapper(cozinhaRepository.listar());
     }
 
     @GetMapping("/{cozinhaId}")

@@ -3,6 +3,7 @@ package br.com.moraesit.moraesfood.api.controller;
 import br.com.moraesit.moraesfood.api.model.CozinhasXmlWrapper;
 import br.com.moraesit.moraesfood.domain.entity.Cozinha;
 import br.com.moraesit.moraesfood.domain.repository.CozinhaRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +43,15 @@ public class CozinhaController {
     public ResponseEntity<Cozinha> adicionar(@RequestBody Cozinha cozinha) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(cozinhaRepository.salvar(cozinha));
+    }
+
+    @PutMapping("/{cozinhaId}")
+    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        final Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+        if (cozinhaAtual != null) {
+            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+            return ResponseEntity.ok(cozinhaRepository.salvar(cozinhaAtual));
+        }
+        return ResponseEntity.notFound().build();
     }
 }

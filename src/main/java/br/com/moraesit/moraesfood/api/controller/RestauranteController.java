@@ -4,11 +4,14 @@ import br.com.moraesit.moraesfood.domain.entity.Restaurante;
 import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
 import br.com.moraesit.moraesfood.domain.service.RestauranteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +78,15 @@ public class RestauranteController {
     }
 
     private void merge(Map<String, Object> args, Restaurante restauranteDestino) {
-        args.forEach((nomePropriedade, valorPropriedade) -> System.out.println(nomePropriedade + " = " + valorPropriedade));
+        ObjectMapper objectMapper = new ObjectMapper();
+        final Restaurante restauranteOrigem = objectMapper.convertValue(args, Restaurante.class);
+        args.forEach((property, value) -> {
+            final Field field = ReflectionUtils.findField(Restaurante.class, property);
+            if (field != null) {
+                field.setAccessible(true);
+                Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+                ReflectionUtils.setField(field, restauranteDestino, novoValor);
+            }
+        });
     }
 }

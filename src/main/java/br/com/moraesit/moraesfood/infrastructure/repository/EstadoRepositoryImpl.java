@@ -2,6 +2,7 @@ package br.com.moraesit.moraesfood.infrastructure.repository;
 
 import br.com.moraesit.moraesfood.domain.entity.Estado;
 import br.com.moraesit.moraesfood.domain.repository.EstadoRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,10 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
     @Override
     @Transactional
-    public void remover(Estado estado) {
-        estado = entityManager.find(Estado.class, estado.getId());
+    public void remover(Long id) {
+        final Estado estado = buscar(id);
+        if (estado == null)
+            throw new EmptyResultDataAccessException(1);
         entityManager.remove(estado);
     }
 }

@@ -2,6 +2,7 @@ package br.com.moraesit.moraesfood.infrastructure.repository;
 
 import br.com.moraesit.moraesfood.domain.entity.Cidade;
 import br.com.moraesit.moraesfood.domain.repository.CidadeRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,10 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 
     @Override
     @Transactional
-    public void remover(Cidade cidade) {
-        cidade = entityManager.find(Cidade.class, cidade.getId());
+    public void remover(Long id) {
+        final Cidade cidade = buscar(id);
+        if (cidade == null)
+            throw new EmptyResultDataAccessException(1);
         entityManager.remove(cidade);
     }
 }

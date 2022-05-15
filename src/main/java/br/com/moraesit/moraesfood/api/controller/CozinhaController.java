@@ -4,6 +4,7 @@ import br.com.moraesit.moraesfood.api.model.CozinhasXmlWrapper;
 import br.com.moraesit.moraesfood.domain.entity.Cozinha;
 import br.com.moraesit.moraesfood.domain.repository.CozinhaRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +54,19 @@ public class CozinhaController {
             return ResponseEntity.ok(cozinhaRepository.salvar(cozinhaAtual));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{cozinhaId}")
+    public ResponseEntity remover(@PathVariable Long cozinhaId) {
+        try {
+            final Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
+            if (cozinha != null) {
+                cozinhaRepository.remover(cozinha);
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.notFound().build();
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 }

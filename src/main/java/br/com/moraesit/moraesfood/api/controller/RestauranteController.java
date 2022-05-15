@@ -1,12 +1,12 @@
 package br.com.moraesit.moraesfood.api.controller;
 
 import br.com.moraesit.moraesfood.domain.entity.Restaurante;
+import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
+import br.com.moraesit.moraesfood.domain.service.RestauranteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,9 +15,11 @@ import java.util.List;
 public class RestauranteController {
 
     private final RestauranteRepository restauranteRepository;
+    private final RestauranteService restauranteService;
 
-    public RestauranteController(RestauranteRepository restauranteRepository) {
+    public RestauranteController(RestauranteRepository restauranteRepository, RestauranteService restauranteService) {
         this.restauranteRepository = restauranteRepository;
+        this.restauranteService = restauranteService;
     }
 
     @GetMapping
@@ -26,11 +28,21 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity buscar(@PathVariable Long restauranteId) {
+    public ResponseEntity<?> buscar(@PathVariable Long restauranteId) {
         final Restaurante restaurante = restauranteRepository.buscar(restauranteId);
         if (restaurante != null) {
             return ResponseEntity.ok(restaurante);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(restauranteService.salvar(restaurante));
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

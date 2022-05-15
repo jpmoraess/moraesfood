@@ -3,6 +3,7 @@ package br.com.moraesit.moraesfood.api.controller;
 import br.com.moraesit.moraesfood.api.model.CozinhasXmlWrapper;
 import br.com.moraesit.moraesfood.domain.entity.Cozinha;
 import br.com.moraesit.moraesfood.domain.repository.CozinhaRepository;
+import br.com.moraesit.moraesfood.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,11 @@ import java.util.List;
 @RequestMapping("/cozinhas")
 public class CozinhaController {
 
+    private final CozinhaService cozinhaService;
     private final CozinhaRepository cozinhaRepository;
 
-    public CozinhaController(CozinhaRepository cozinhaRepository) {
+    public CozinhaController(CozinhaService cozinhaService, CozinhaRepository cozinhaRepository) {
+        this.cozinhaService = cozinhaService;
         this.cozinhaRepository = cozinhaRepository;
     }
 
@@ -43,7 +46,7 @@ public class CozinhaController {
     @PostMapping
     public ResponseEntity<Cozinha> adicionar(@RequestBody Cozinha cozinha) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(cozinhaRepository.salvar(cozinha));
+                .body(cozinhaService.salvar(cozinha));
     }
 
     @PutMapping("/{cozinhaId}")

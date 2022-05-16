@@ -18,6 +18,6 @@ public class AlteracaoCozinhaMain {
         final Cozinha cozinha = new Cozinha();
         cozinha.setId(1L);
         cozinha.setNome("Argentina");
-        cozinhaRepository.salvar(cozinha);
+        cozinhaRepository.save(cozinha);
     }
 }

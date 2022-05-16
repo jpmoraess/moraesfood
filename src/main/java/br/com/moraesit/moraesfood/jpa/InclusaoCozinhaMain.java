@@ -21,7 +21,7 @@ public class InclusaoCozinhaMain {
         final Cozinha c2 = new Cozinha();
         c2.setNome("Italiana");
 
-        cozinhaRepository.salvar(c1);
-        cozinhaRepository.salvar(c2);
+        cozinhaRepository.save(c1);
+        cozinhaRepository.save(c2);
     }
 }

@@ -22,8 +22,8 @@ public class Controller {
         return "Hello!";
     }
 
-    @GetMapping("/cozinhas")
-    public List<Cozinha> consultarPorNome(@RequestParam("nome") String nome) {
-        return cozinhaRepository.consultarPorNome(nome);
-    }
+//    @GetMapping("/cozinhas")
+//    public List<Cozinha> consultarPorNome(@RequestParam("nome") String nome) {
+//        return cozinhaRepository.consultarPorNome(nome);
+//    }
 }

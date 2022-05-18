@@ -23,6 +23,6 @@ public class RestauranteService {
         final Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Não existe cozinha com o id: %d", cozinhaId)));
         restaurante.setCozinha(cozinha);
-        return restauranteRepository.salvar(restaurante);
+        return restauranteRepository.save(restaurante);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -29,16 +30,13 @@ public class RestauranteController {
 
     @GetMapping
     public List<Restaurante> listar() {
-        return restauranteRepository.listar();
+        return restauranteRepository.findAll();
     }
 
     @GetMapping("/{restauranteId}")
     public ResponseEntity<?> buscar(@PathVariable Long restauranteId) {
-        final Restaurante restaurante = restauranteRepository.buscar(restauranteId);
-        if (restaurante != null) {
-            return ResponseEntity.ok(restaurante);
-        }
-        return ResponseEntity.notFound().build();
+        final Optional<Restaurante> restauranteOptional = restauranteRepository.findById(restauranteId);
+        return restauranteOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -54,10 +52,10 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
         try {
-            final Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
-            if (restauranteAtual != null) {
-                BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-                return ResponseEntity.ok(restauranteService.salvar(restauranteAtual));
+            final Optional<Restaurante> restauranteAtualOptional = restauranteRepository.findById(restauranteId);
+            if (restauranteAtualOptional.isPresent()) {
+                BeanUtils.copyProperties(restaurante, restauranteAtualOptional.get(), "id");
+                return ResponseEntity.ok(restauranteService.salvar(restauranteAtualOptional.get()));
             }
             return ResponseEntity.notFound().build();
         } catch (EntidadeNaoEncontradaException e) {
@@ -67,14 +65,14 @@ public class RestauranteController {
 
     @PatchMapping("/{restauranteId}")
     public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> args) {
-        final Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+        final Optional<Restaurante> restauranteAtualOptional = restauranteRepository.findById(restauranteId);
 
-        if (restauranteAtual == null)
+        if (restauranteAtualOptional.isEmpty())
             return ResponseEntity.notFound().build();
 
-        merge(args, restauranteAtual);
+        merge(args, restauranteAtualOptional.get());
 
-        return atualizar(restauranteId, restauranteAtual);
+        return atualizar(restauranteId, restauranteAtualOptional.get());
     }
 
     private void merge(Map<String, Object> args, Restaurante restauranteDestino) {

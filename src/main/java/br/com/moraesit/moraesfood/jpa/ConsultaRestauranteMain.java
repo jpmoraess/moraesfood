@@ -17,7 +17,7 @@ public class ConsultaRestauranteMain {
 
         final RestauranteRepository restauranteRepository = context.getBean(RestauranteRepository.class);
 
-        final List<Restaurante> restaurantes = restauranteRepository.listar();
+        final List<Restaurante> restaurantes = restauranteRepository.findAll();
 
         restaurantes.forEach(restaurante -> System.out.printf("Restaurante: %s, Cozinha: %s, Taxa Frete: %f\n", restaurante.getNome(), restaurante.getCozinha().getNome(), restaurante.getTaxaFrete()));
     }

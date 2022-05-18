@@ -1,15 +1,9 @@
 package br.com.moraesit.moraesfood.domain.repository;
 
 import br.com.moraesit.moraesfood.domain.entity.FormaPagamento;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface FormaPagamentoRepository {
-    List<FormaPagamento> listar();
-
-    FormaPagamento buscar(Long id);
-
-    FormaPagamento salvar(FormaPagamento formaPagamento);
-
-    void remover(FormaPagamento formaPagamento);
+@Repository
+public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, Long> {
 }

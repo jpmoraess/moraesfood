@@ -10,9 +10,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
-import static br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
-
 @RestController
 @RequestMapping("/teste")
 public class Controller {
@@ -82,6 +79,6 @@ public class Controller {
 
     @GetMapping("/restaurantes/com-frete-gratis")
     public List<Restaurante> restaurantesComFreteGratis(String nome) {
-        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
+        return restauranteRepository.findComFreteGratis(nome);
     }
 }

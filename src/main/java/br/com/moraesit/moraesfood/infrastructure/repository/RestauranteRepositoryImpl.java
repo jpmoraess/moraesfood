@@ -1,7 +1,10 @@
 package br.com.moraesit.moraesfood.infrastructure.repository;
 
 import br.com.moraesit.moraesfood.domain.entity.Restaurante;
+import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepositoryCustom;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -15,11 +18,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryCustom {
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Autowired @Lazy
+    private RestauranteRepository restauranteRepository;
 
     @Override
     public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
@@ -41,5 +50,10 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryCustom {
         criteria.where(predicates.toArray(new Predicate[0]));
 
         return manager.createQuery(criteria).getResultList();
+    }
+
+    @Override
+    public List<Restaurante> findComFreteGratis(String nome) {
+        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
     }
 }

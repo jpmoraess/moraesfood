@@ -4,13 +4,14 @@ import br.com.moraesit.moraesfood.domain.entity.Cozinha;
 import br.com.moraesit.moraesfood.domain.entity.Restaurante;
 import br.com.moraesit.moraesfood.domain.repository.CozinhaRepository;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
-import br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
-import br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
+import static br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static br.com.moraesit.moraesfood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
 
 @RestController
 @RequestMapping("/teste")
@@ -81,8 +82,6 @@ public class Controller {
 
     @GetMapping("/restaurantes/com-frete-gratis")
     public List<Restaurante> restaurantesComFreteGratis(String nome) {
-        var comFreteGratis = new RestauranteComFreteGratisSpec();
-        var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
-        return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
     }
 }

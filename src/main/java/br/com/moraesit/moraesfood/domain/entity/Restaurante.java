@@ -1,6 +1,7 @@
 package br.com.moraesit.moraesfood.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,9 @@ public class Restaurante {
     @Column(name = "tx_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-    @ManyToOne
+    //@JsonIgnore
+    //@JsonIgnoreProperties("hibernateLazyInitializer")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 

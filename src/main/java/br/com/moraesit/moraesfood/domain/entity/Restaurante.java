@@ -43,6 +43,10 @@ public class Restaurante {
     private List<FormaPagamento> formaPagamentos;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "restaurante")
+    private List<Produto> produtos;
+
+    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCadastro;

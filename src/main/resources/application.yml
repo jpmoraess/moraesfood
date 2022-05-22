@@ -2,8 +2,13 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/moraesfood
     username: postgres
-    password: docker
+    password: beholder
     driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 10 # default 10
+      maximum-pool-size: 10 # default 10
+      idle-timeout: 10000 # default 10000
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     generate-ddl: true

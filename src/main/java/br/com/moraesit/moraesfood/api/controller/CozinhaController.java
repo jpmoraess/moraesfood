@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -29,9 +28,8 @@ public class CozinhaController {
     }
 
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-        final Optional<Cozinha> cozinhaOptional = cozinhaRepository.findById(cozinhaId);
-        return cozinhaOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public Cozinha buscar(@PathVariable Long cozinhaId) {
+        return cozinhaService.buscar(cozinhaId);
     }
 
     @PostMapping
@@ -41,29 +39,13 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-        final Optional<Cozinha> cozinhaAtualOptional = cozinhaRepository.findById(cozinhaId);
-        if (cozinhaAtualOptional.isPresent()) {
-            BeanUtils.copyProperties(cozinha, cozinhaAtualOptional.get(), "id");
-            return ResponseEntity.ok(cozinhaService.salvar(cozinhaAtualOptional.get()));
-        }
-        return ResponseEntity.notFound().build();
-    }
+    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        Cozinha cozinhaAtual = cozinhaService.buscar(cozinhaId);
 
-    /* Usar para outros exemplos de tratamento de exception
+        BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 
-    @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity remover(@PathVariable Long cozinhaId) {
-        try {
-            cozinhaService.remover(cozinhaId);
-            return ResponseEntity.noContent().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeEmUsoException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        return cozinhaService.salvar(cozinhaAtual);
     }
-     */
 
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

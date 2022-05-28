@@ -1,7 +1,6 @@
 package br.com.moraesit.moraesfood.api.controller;
 
 import br.com.moraesit.moraesfood.domain.entity.Cidade;
-import br.com.moraesit.moraesfood.domain.repository.CidadeRepository;
 import br.com.moraesit.moraesfood.domain.service.CidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -12,11 +11,9 @@ import org.springframework.web.bind.annotation.*;
 public class CidadeController {
 
     private final CidadeService cidadeService;
-    private final CidadeRepository cidadeRepository;
 
-    public CidadeController(CidadeService cidadeService, CidadeRepository cidadeRepository) {
+    public CidadeController(CidadeService cidadeService) {
         this.cidadeService = cidadeService;
-        this.cidadeRepository = cidadeRepository;
     }
 
     @GetMapping("/{cidadeId}")

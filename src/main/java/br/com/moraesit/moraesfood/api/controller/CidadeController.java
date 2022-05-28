@@ -1,7 +1,7 @@
 package br.com.moraesit.moraesfood.api.controller;
 
 import br.com.moraesit.moraesfood.domain.entity.Cidade;
-import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.moraesit.moraesfood.domain.exception.EstadoNaoEncontradoException;
 import br.com.moraesit.moraesfood.domain.exception.NegocioException;
 import br.com.moraesit.moraesfood.domain.service.CidadeService;
 import org.springframework.beans.BeanUtils;
@@ -28,19 +28,19 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
             return cidadeService.salvar(cidade);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-        Cidade cidadeAtual = cidadeService.buscar(cidadeId);
-        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
         try {
+            Cidade cidadeAtual = cidadeService.buscar(cidadeId);
+            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
             return cidadeService.salvar(cidadeAtual);
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
         }
     }
 

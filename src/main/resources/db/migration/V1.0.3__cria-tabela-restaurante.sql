@@ -1,5 +1,6 @@
 create table restaurante (
     id                        serial primary key,
+    nome                      varchar(60) not null,
     tx_frete                  numeric(5, 2) not null,
     cozinha_id                int references cozinha,
     endereco_cep              varchar(10),

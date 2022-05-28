@@ -25,9 +25,9 @@ public class RestauranteService {
     }
 
     public Restaurante salvar(Restaurante restaurante) {
-        final Long cozinhaId = restaurante.getCozinha().getId();
+        Long cozinhaId = restaurante.getCozinha().getId();
 
-        final Cozinha cozinha = cozinhaService.buscar(cozinhaId);
+        Cozinha cozinha = cozinhaService.buscar(cozinhaId);
 
         restaurante.setCozinha(cozinha);
 

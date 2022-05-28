@@ -1,6 +1,8 @@
 package br.com.moraesit.moraesfood.api.controller;
 
 import br.com.moraesit.moraesfood.domain.entity.Restaurante;
+import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.moraesit.moraesfood.domain.exception.NegocioException;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
 import br.com.moraesit.moraesfood.domain.service.RestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,17 +40,23 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
-        return restauranteService.salvar(restaurante);
+        try {
+            return restauranteService.salvar(restaurante);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{restauranteId}")
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
         Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
-
         BeanUtils.copyProperties(restaurante, restauranteAtual,
                 "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
-
-        return restauranteService.salvar(restauranteAtual);
+        try {
+            return restauranteService.salvar(restauranteAtual);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PatchMapping("/{restauranteId}")

@@ -1,8 +1,6 @@
 package br.com.moraesit.moraesfood.api.controller;
 
 import br.com.moraesit.moraesfood.domain.entity.Cozinha;
-import br.com.moraesit.moraesfood.domain.exception.EntidadeEmUsoException;
-import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.repository.CozinhaRepository;
 import br.com.moraesit.moraesfood.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
@@ -52,6 +50,8 @@ public class CozinhaController {
         return ResponseEntity.notFound().build();
     }
 
+    /* Usar para outros exemplos de tratamento de exception
+
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity remover(@PathVariable Long cozinhaId) {
         try {
@@ -62,5 +62,12 @@ public class CozinhaController {
         } catch (EntidadeEmUsoException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+     */
+
+    @DeleteMapping("/{cozinhaId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cozinhaId) {
+        cozinhaService.remover(cozinhaId);
     }
 }

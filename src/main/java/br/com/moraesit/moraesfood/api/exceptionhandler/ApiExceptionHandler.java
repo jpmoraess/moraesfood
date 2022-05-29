@@ -1,5 +1,6 @@
 package br.com.moraesit.moraesfood.api.exceptionhandler;
 
+import br.com.moraesit.moraesfood.domain.exception.EntidadeEmUsoException;
 import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.exception.NegocioException;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,16 @@ public class ApiExceptionHandler {
                 .mensagem(e.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(problema);
+    }
+
+    @ExceptionHandler(EntidadeEmUsoException.class)
+    public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e) {
+        final var problema = Problema.builder()
+                .dataHora(LocalDateTime.now())
+                .mensagem(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(problema);
     }
 

@@ -1,7 +1,7 @@
 package br.com.moraesit.moraesfood.api.controller;
 
 import br.com.moraesit.moraesfood.domain.entity.Restaurante;
-import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.moraesit.moraesfood.domain.exception.CozinhaNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.exception.NegocioException;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
 import br.com.moraesit.moraesfood.domain.service.RestauranteService;
@@ -42,19 +42,19 @@ public class RestauranteController {
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
         try {
             return restauranteService.salvar(restaurante);
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
 
     @PutMapping("/{restauranteId}")
     public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
-        Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
-        BeanUtils.copyProperties(restaurante, restauranteAtual,
-                "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
         try {
+            Restaurante restauranteAtual = restauranteService.buscar(restauranteId);
+            BeanUtils.copyProperties(restaurante, restauranteAtual,
+                    "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
             return restauranteService.salvar(restauranteAtual);
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }

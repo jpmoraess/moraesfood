@@ -2,8 +2,8 @@ package br.com.moraesit.moraesfood.domain.service;
 
 import br.com.moraesit.moraesfood.domain.entity.Cidade;
 import br.com.moraesit.moraesfood.domain.entity.Estado;
+import br.com.moraesit.moraesfood.domain.exception.CidadeNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.exception.EntidadeEmUsoException;
-import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
 import br.com.moraesit.moraesfood.domain.repository.CidadeRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CidadeService {
 
-    public static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe um cadastro de cidade com id: %d";
     public static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
 
     private final CidadeRepository cidadeRepository;
@@ -25,7 +24,7 @@ public class CidadeService {
 
     public Cidade buscar(Long cidadeId) {
         return cidadeRepository.findById(cidadeId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+                .orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
     }
 
     public Cidade salvar(Cidade cidade) {
@@ -42,7 +41,7 @@ public class CidadeService {
         try {
             cidadeRepository.deleteById(cidadeId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId));
+            throw new CidadeNaoEncontradaException(cidadeId);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
         }

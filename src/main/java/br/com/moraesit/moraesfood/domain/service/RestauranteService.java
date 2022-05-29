@@ -2,14 +2,12 @@ package br.com.moraesit.moraesfood.domain.service;
 
 import br.com.moraesit.moraesfood.domain.entity.Cozinha;
 import br.com.moraesit.moraesfood.domain.entity.Restaurante;
-import br.com.moraesit.moraesfood.domain.exception.EntidadeNaoEncontradaException;
+import br.com.moraesit.moraesfood.domain.exception.RestauranteNaoEncontradoException;
 import br.com.moraesit.moraesfood.domain.repository.RestauranteRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RestauranteService {
-
-    public static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe restaurante com o id: %d";
 
     private final CozinhaService cozinhaService;
     private final RestauranteRepository restauranteRepository;
@@ -21,7 +19,7 @@ public class RestauranteService {
 
     public Restaurante buscar(Long restauranteId) {
         return restauranteRepository.findById(restauranteId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
     }
 
     public Restaurante salvar(Restaurante restaurante) {
